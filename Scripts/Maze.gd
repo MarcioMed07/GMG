@@ -1,19 +1,24 @@
 extends Node2D
 const Cell = preload("Cell.gd");
+const Utils = preload("Utils.gd")
+
+const algorithms = [
+	preload("res://Scripts/Algorithms/Prim.gd"),
+	preload("res://Scripts/Algorithms/DepthFirst.gd"),
+	preload("res://Scripts/Algorithms/AldousBroder.gd")
+]
 
 #Ui Variables
 onready var panel: Panel =  get_node("/root/Game/CanvasLayer/Divider/Panel")
 onready var watchBuilding: CheckBox = panel.get_node("MarginContainer/VBoxContainer/WatchCheckBox")
 onready var xSpinBox: SpinBox = panel.get_node("MarginContainer/VBoxContainer/DimensionHbox/XSpinVBox/XSpinBox")
 onready var ySpinBox: SpinBox = panel.get_node("MarginContainer/VBoxContainer/DimensionHbox/YSpinVBox/YSpinBox")
+onready var options: OptionButton = panel.get_node("MarginContainer/VBoxContainer/OptionButton")
 
 # Maze variables
 var height: int = 4;
 var width: int = 4;
 var cells: Array;
-var dummy: Cell = Cell.new();
-var generator = funcref(self, "generateDepthFirst")
-var generatorProccess
 var processingMaze = false
 var cellStack = []
 
@@ -29,10 +34,8 @@ func _ready():
 	width = xSpinBox.value
 	height = ySpinBox.value
 	var speedModifier = panel.get_node("MarginContainer/VBoxContainer/SpeedSlider").value
-	var options = panel.get_node("MarginContainer/VBoxContainer/OptionButton")
-	options.add_item("Depth First",0)
-	options.add_item("Adous-Broder",1)
-	options.add_item("Simple Prim",2)
+	for algorithm in algorithms:
+		options.add_item(algorithm.name)
 #	generator.call_func();
 	pass
 
@@ -41,115 +44,12 @@ func _process(delta):
 	if Input.is_action_just_pressed("mouse_click"):
 		floodQueue.append($TileMap.world_to_map(get_global_mouse_position()/scale))
 	floodProcess(delta)
-	if processingMaze:
-		generatorProccess.call_func();
-	while !watchBuilding.pressed && processingMaze:
-		generatorProccess.call_func();
-	pass
-
-
-## Depth First
-func generateDepthFirst():
-	prepareMaze()
-	var x = 0;
-	var y = 0;
-	cellStack = []
-	var cell = getCell(x,y)
-	cell.visit()
-	cellStack.push_back(cell)
-	processingMaze = true
-	generatorProccess = funcref(self, "processDepthFirst")
-	
-	
-func processDepthFirst():
-	if cellStack.size() > 0:
-		var found = false
-		var cell = cellStack.pop_front()
-		var neiDict = getNeighbors(cell.x,cell.y)
-		var neiKeys = shuffle(neiDict.keys())
-		for dir in neiKeys:
-			if !neiDict[dir].visited:
-				cellStack.push_front(cell)
-				neiDict[dir].setWall(Cell.oppositeWall(dir),false);
-				cell.setWall(dir,false)
-				neiDict[dir].visit()
-				cellStack.push_front(neiDict[dir])
-				found = true
-				break
-		if !found:
-			processDepthFirst()
-	else:
-		processingMaze = false
-		buildTiles()
-	if watchBuilding.pressed:
-		buildTiles(true)
-
-
-## Aldous-Broder
-func generateAldousBroder():
-	prepareMaze()
-	cellStack = []
-	var cell = getCell(0,0)
-	cell.visit()
-	cellStack.push_front(cell)
-	processingMaze = true
-	generatorProccess = funcref(self, "processAldousBroder")
-	
-
-func processAldousBroder():
-	if cellStack.size() < cells.size():
-		var cell = cellStack[0]
-		var neiDict = getNeighbors(cell.x,cell.y)
-		var neiKeys = shuffle(neiDict.keys())
-		for dir in neiKeys:
-			if neiDict[dir] != dummy:
-				if !neiDict[dir].visited:
-					neiDict[dir].setWall(Cell.oppositeWall(dir),false)
-					cell.setWall(dir,false)
-					neiDict[dir].visit()
-					cellStack.push_front(neiDict[dir])
-				else:
-					cellStack.erase(neiDict[dir])
-					cellStack.push_front(neiDict[dir])
-				break;
+		
+	while processingMaze:
+		algorithms[options.selected].process(self)
 		if watchBuilding.pressed:
 			buildTiles(true)
-	else:
-		buildTiles()
-		processingMaze = false
-
-
-## Prim
-func generatePrim():
-	prepareMaze()
-	cellStack = []
-	var cell = getCell(0,0)
-	cell.visit()
-	cellStack.push_front(cell)
-	processingMaze = true
-	generatorProccess = funcref(self, "processPrim")
-	pass
-	
-
-func processPrim():
-	if cellStack.size() > 0:
-		cellStack = shuffle(cellStack)
-		var cell = cellStack.pop_front()
-		var neiDict = getNeighbors(cell.x,cell.y)
-		var neiKeys = shuffle(neiDict.keys())
-		for dir in neiKeys:
-			if !neiDict[dir].visited:
-				neiDict[dir].setWall(Cell.oppositeWall(dir),false);
-				cell.setWall(dir,false)
-				neiDict[dir].visit()
-				cellStack.push_front(neiDict[dir])
-				cellStack.push_front(cell)
-				break
-		if watchBuilding.pressed:
-			buildTiles(true)
-	else:
-		buildTiles()
-		processingMaze = false
+			break
 	pass
 
 
@@ -166,7 +66,7 @@ func floodFill(queue):
 	var q = []
 	for vector in queue:
 		q.append(flood(vector))
-	return flat(q)
+	return Utils.flat(q)
 
 
 func flood(vector:Vector2):
@@ -192,6 +92,8 @@ func getCell(x,y):
 
 
 func getNeighbors(x,y):
+	var dummy = Cell.new()
+	dummy.visit()
 	return {
 		Cell.Wall.UP: getCell(x,y-1) if y > 0 else dummy, 			#UP
 		Cell.Wall.DOWN: getCell(x,y+1) if y < height-1 else dummy,	#DOWN
@@ -201,9 +103,9 @@ func getNeighbors(x,y):
 
 
 func prepareMaze():
+	
 	width = xSpinBox.value
 	height = ySpinBox.value
-	dummy.visit();
 	cells = []
 	var size = height*width;
 	for i in range(size):
@@ -212,7 +114,14 @@ func prepareMaze():
 		cell.y = int(i/width);
 		cells.append(cell);
 	$TileMap.clear()
+	fixScale()
 	last = getCell(0,0)
+	
+
+func finishGeneration():
+	processingMaze = false
+	buildTiles()
+	options.disabled = false
 
 
 func fixScale():
@@ -227,8 +136,7 @@ func fixScale():
 
 
 func buildTiles(building = false):
-	var tm = $TileMap	
-	fixScale()
+	var tm = $TileMap
 	if building && cellStack.size() > 0:
 		var cell = cellStack[0]
 		if last:
@@ -256,46 +164,17 @@ func buildTiles(building = false):
 			tm.set_cellv(vec + Vector2(+1+1,0+1), cell.walls[Cell.Wall.RIGHT])
 
 
-## Easy of life stuff
-func flat(arr):
-	var flat_list = []
-	for sublist in arr:
-		if sublist:
-			for item in sublist:
-				flat_list.append(item)
-	return flat_list
-
-func shuffle(arr):
-	var shuffled = arr.duplicate()
-	shuffled.shuffle()
-	var sampled = []
-	for i in range(arr.size()):
-		sampled.append( shuffled.pop_front() )
-	return sampled
-
-
 ## Connections
 func _on_SpeedSlider_value_changed(value):
 	speedModifier = value
 	pass # Replace with function body.
 
 
-func _on_OptionButton_item_selected(index):
-	match(index):
-		0:
-			generator = funcref(self, "generateDepthFirst")
-		1:
-			generator = funcref(self, "generateAldousBroder")
-		2:
-			generator = funcref(self, "generatePrim")
-		_:
-			generator = funcref(self, "generateDepthFirst")
-	pass # Replace with function body.
-
-
 func _on_GenerateButton_pressed():
-	generator.call_func();
+	algorithms[options.selected].generate(self)
 	floodQueue = []
+	processingMaze = true
+	options.disabled = true
 	pass # Replace with function body.
 
 

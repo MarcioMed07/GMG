@@ -181,7 +181,6 @@ margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Reset Flood"
 [connection signal="dragged" from="CanvasLayer/Divider" to="CanvasLayer/Divider/ViewportContainer/Maze" method="_on_Divider_dragged"]
-[connection signal="item_selected" from="CanvasLayer/Divider/Panel/MarginContainer/VBoxContainer/OptionButton" to="CanvasLayer/Divider/ViewportContainer/Maze" method="_on_OptionButton_item_selected"]
 [connection signal="value_changed" from="CanvasLayer/Divider/Panel/MarginContainer/VBoxContainer/DimensionHbox/XSpinVBox/XSpinBox" to="CanvasLayer/Divider/ViewportContainer/Maze" method="_on_XSpinBox_value_changed"]
 [connection signal="value_changed" from="CanvasLayer/Divider/Panel/MarginContainer/VBoxContainer/DimensionHbox/YSpinVBox/YSpinBox" to="CanvasLayer/Divider/ViewportContainer/Maze" method="_on_YSpinBox_value_changed"]
 [connection signal="pressed" from="CanvasLayer/Divider/Panel/MarginContainer/VBoxContainer/GenerateButton" to="CanvasLayer/Divider/ViewportContainer/Maze" method="_on_GenerateButton_pressed"]

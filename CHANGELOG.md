@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - This Changelog
 ### Changed
 - Separated some utilities functions to its own file
+- Separated each generation algorithm to its own file
 
 ## [1.0.0] - 2020-08-19
 ### Added
