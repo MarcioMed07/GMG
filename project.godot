@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Cell",
 "language": "GDScript",
 "path": "res://Scripts/Cell.gd"
+}, {
+"base": "Node2D",
+"class": "Maze",
+"language": "GDScript",
+"path": "res://Scripts/Maze.gd"
 } ]
 _global_script_class_icons={
-"Cell": ""
+"Cell": "",
+"Maze": ""
 }
 
 [application]
@@ -55,5 +61,5 @@ quality/intended_usage/framebuffer_allocation.mobile=0
 threads/thread_model=2
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
-environment/default_clear_color=Color( 0, 0, 0, 1 )
+environment/default_clear_color=Color( 0.0941176, 0.0941176, 0.0941176, 1 )
 environment/default_environment="res://default_env.tres"

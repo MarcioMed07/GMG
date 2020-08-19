@@ -1,0 +1,191 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Panel.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.141176, 0.141176, 0.141176, 1 )
+
+[node name="Panel" type="Panel"]
+margin_left = 718.0
+margin_right = 1024.0
+margin_bottom = 576.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = -20.0
+margin_bottom = -20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_right = 266.0
+margin_bottom = 536.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AlgorithmContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 223.0
+margin_right = 266.0
+margin_bottom = 313.0
+
+[node name="AlgorithmOptions" type="OptionButton" parent="MarginContainer/VBoxContainer/AlgorithmContainer"]
+margin_right = 266.0
+margin_bottom = 20.0
+clip_text = true
+align = 1
+
+[node name="DimensionHbox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/AlgorithmContainer"]
+margin_top = 24.0
+margin_right = 266.0
+margin_bottom = 66.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="XSpinVBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox"]
+margin_right = 131.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+
+[node name="XSpinLabel" type="Label" parent="MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox/XSpinVBox"]
+margin_right = 131.0
+margin_bottom = 14.0
+text = "X"
+
+[node name="XSpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox/XSpinVBox"]
+margin_top = 18.0
+margin_right = 131.0
+margin_bottom = 42.0
+min_value = 3.0
+value = 25.0
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="YSpinVBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox"]
+margin_left = 135.0
+margin_right = 266.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+
+[node name="YSpinLabel" type="Label" parent="MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox/YSpinVBox"]
+margin_right = 131.0
+margin_bottom = 14.0
+text = "Y"
+
+[node name="YSpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox/YSpinVBox"]
+margin_top = 18.0
+margin_right = 131.0
+margin_bottom = 42.0
+min_value = 3.0
+value = 25.0
+rounded = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/AlgorithmContainer"]
+margin_top = 70.0
+margin_right = 266.0
+margin_bottom = 90.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StepButton" type="Button" parent="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer"]
+margin_right = 60.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Step"
+
+[node name="RunStopButton" type="Button" parent="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer"]
+margin_left = 64.0
+margin_right = 124.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Run"
+
+[node name="CompleteButton" type="Button" parent="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer"]
+margin_left = 128.0
+margin_right = 202.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Complete"
+
+[node name="ResetButton" type="Button" parent="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer"]
+margin_left = 206.0
+margin_right = 266.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Reset"
+
+[node name="FloodContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
+margin_top = 286.0
+margin_right = 266.0
+margin_bottom = 344.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FloodLabel" type="Label" parent="MarginContainer/VBoxContainer/FloodContainer"]
+margin_right = 266.0
+margin_bottom = 14.0
+text = "Flood Speed"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpeedSlider" type="HSlider" parent="MarginContainer/VBoxContainer/FloodContainer"]
+margin_top = 18.0
+margin_right = 266.0
+margin_bottom = 34.0
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 0.5
+ticks_on_borders = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FloodHbox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/FloodContainer"]
+margin_top = 38.0
+margin_right = 266.0
+margin_bottom = 58.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PauseFloodButton" type="Button" parent="MarginContainer/VBoxContainer/FloodContainer/FloodHbox"]
+margin_right = 131.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Pause Flood"
+
+[node name="ResetFloodButton" type="Button" parent="MarginContainer/VBoxContainer/FloodContainer/FloodHbox"]
+margin_left = 135.0
+margin_right = 266.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Reset Flood"
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/StepButton" to="." method="_on_StepButton_pressed"]
+[connection signal="toggled" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/RunStopButton" to="." method="_on_RunStopButton_toggled"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/CompleteButton" to="." method="_on_CompleteButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/ResetButton" to="." method="_on_ResetButton_pressed"]

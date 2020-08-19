@@ -13,6 +13,7 @@ static func generate(maze):
 
 static func process(maze):
 	if maze.cellStack.size() > 0:
+		var found = false
 		maze.cellStack = Utils.shuffle(maze.cellStack)
 		var cell = maze.cellStack.pop_front()
 		var neiDict = maze.getNeighbors(cell.x,cell.y)
@@ -24,7 +25,10 @@ static func process(maze):
 				neiDict[dir].visit()
 				maze.cellStack.push_front(neiDict[dir])
 				maze.cellStack.push_front(cell)
+				found = true
 				break
+		if !found:
+			process(maze)
 	else:
 		maze.finishGeneration()
 	pass
