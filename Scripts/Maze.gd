@@ -2,6 +2,7 @@ extends Node2D
 class_name Maze
 const Cell = preload("res://Scripts/Cell.gd");
 const Utils = preload("res://Scripts/Utils.gd")
+const Flood = preload("res://Scripts/Algorithms/Flood.gd")
 
 const algorithms = [
 	preload("res://Scripts/Algorithms/Prim.gd"),
@@ -16,23 +17,12 @@ onready var panel: Panel =  get_node("/root/Game/CanvasLayer/Divider/Panel")
 var cells: Array;
 var generatingMaze = false
 var cellStack = []
-
-# Flood variables
-var floodQueue = []
-var floodPause = false
-var speedModifier = 0.5
-var floodCD = speedModifier
+var flood: Flood = Flood.new()
 var last
 
 
-func _ready():
-	pass
-
-
 func _process(delta):
-	if Input.is_action_just_pressed("mouse_click"):
-		floodQueue.append($TileMap.world_to_map(get_global_mouse_position()/scale))
-	floodProcess(delta)
+	flood.floodProcess(delta,self)
 		
 	if panel.complete :
 		panel.complete = false
@@ -84,11 +74,10 @@ func prepareMaze():
 	buildTiles()
 	fixScale()
 	last = getCell(0,0)
-	
+
 
 func startGeneration():
 	algorithms[panel.algorithmOptions.selected].generate(self)
-	floodQueue = []
 	generatingMaze = true
 	fixScale()
 	pass
@@ -150,44 +139,3 @@ func buildCell(cell, building = false):
 	tm.set_cellv(vec + Vector2(+1,0), cell.walls[Cell.Wall.RIGHT])
 
 
-## Flooding maze
-func resetFlood():
-	buildTiles()
-	floodQueue = []
-	
-	
-func floodPause():
-	floodPause = !floodPause;
-	var button = panel.get_node("MarginContainer/VBoxContainer/FloodHbox/PauseFloodButton")
-	button.text = "Play Flood" if floodPause else "Pause Flood"
-
-func floodProcess(delta):
-	if !floodPause && floodQueue.size() >0:
-		floodCD+=delta
-	if floodCD >= speedModifier && !floodPause:
-		floodQueue = floodFill(floodQueue)
-		floodCD = 0;
-		
-
-func floodFill(queue):
-	var q = []
-	for vector in queue:
-		q.append(flood(vector))
-	return Utils.flat(q)
-
-
-func flood(vector:Vector2):
-	var tm = $TileMap
-	if tm.get_cellv(vector) != 0:
-		return
-	tm.set_cellv(vector,2)
-	var q = []
-	if tm.get_cellv(vector - Vector2(1,0)) == 0:
-		q.append(vector - Vector2(1,0))
-	if tm.get_cellv(vector + Vector2(1,0)) == 0:
-		q.append(vector + Vector2(1,0))
-	if tm.get_cellv(vector - Vector2(0,1)) == 0:
-		q.append(vector - Vector2(0,1))
-	if tm.get_cellv(vector + Vector2(0,1)) == 0:
-		q.append(vector + Vector2(0,1))
-	return q

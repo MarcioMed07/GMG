@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Separated each generation algorithm to its own file
 - Generation Controls
 - Environment background to dark grey
+- Separated flood algorithm, maze is now almost independent
 ### Removed
 - Flood controls (Will come back in the future)
 
