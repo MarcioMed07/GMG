@@ -11,6 +11,11 @@ onready var runStopButton: Button = get_node("MarginContainer/VBoxContainer/Algo
 onready var completeButton: Button = get_node("MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/CompleteButton")
 onready var resetButton: Button = get_node("MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/ResetButton")
 
+onready var floodContainer: VBoxContainer = get_node("MarginContainer/VBoxContainer/FloodContainer")
+onready var pauseFloodButton: Button = get_node("MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox/PauseFloodButton")
+onready var resetFloodButton: Button = get_node("MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox/ResetFloodButton")
+onready var floodSlider: HSlider = get_node("MarginContainer/VBoxContainer/FloodContainer/FloodControls/SpeedSlider")
+
 var step = false
 var runStop = false
 var complete = false
@@ -20,9 +25,15 @@ func _ready():
 		algorithmOptions.add_item(algorithm.name)
 	pass
 
+
+func _process(delta):
+	floodContainer.visible = !maze.generatingMaze
+
+
 func startGeneration():
 	maze.startGeneration()
-	
+
+
 func finishGeneration():
 	runStopButton.disabled = false
 	runStop = false
@@ -32,9 +43,9 @@ func finishGeneration():
 	xSpin.editable = true
 	ySpin.editable = true
 
+
 func _on_Divider_dragged(offset):
 	maze.fixScale()
-	pass # Replace with function body.
 
 
 func _on_StepButton_pressed():
@@ -44,7 +55,6 @@ func _on_StepButton_pressed():
 	ySpin.editable = false
 	if !maze.generatingMaze:
 		startGeneration()
-	pass # Replace with function body.
 
 
 func _on_RunStopButton_toggled(button_pressed):
@@ -56,7 +66,6 @@ func _on_RunStopButton_toggled(button_pressed):
 	stepButton.disabled = button_pressed
 	if !maze.generatingMaze && runStop:
 		startGeneration()
-	pass # Replace with function body.
 
 
 func _on_CompleteButton_pressed():
@@ -71,10 +80,17 @@ func _on_CompleteButton_pressed():
 	stepButton.disabled = true
 	if !maze.generatingMaze:
 		startGeneration()
-	pass # Replace with function body.
 
 
 func _on_ResetButton_pressed():
 	maze.prepareMaze()
 	maze.finishGeneration()
-	pass # Replace with function body.
+
+
+func _on_PauseFloodButton_pressed():
+	maze.flood.floodPause()
+	pauseFloodButton.text = "Pause Flood" if !maze.flood.floodPause else "Resume Flood"
+
+
+func _on_ResetFloodButton_pressed():
+	maze.flood.resetFlood(maze)

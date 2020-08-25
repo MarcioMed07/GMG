@@ -38,9 +38,9 @@ __meta__ = {
 }
 
 [node name="AlgorithmContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 223.0
+margin_top = 152.0
 margin_right = 266.0
-margin_bottom = 313.0
+margin_bottom = 242.0
 
 [node name="AlgorithmOptions" type="OptionButton" parent="MarginContainer/VBoxContainer/AlgorithmContainer"]
 margin_right = 266.0
@@ -136,15 +136,39 @@ size_flags_horizontal = 3
 text = "Reset"
 
 [node name="FloodContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-visible = false
-margin_top = 286.0
+margin_top = 246.0
 margin_right = 266.0
-margin_bottom = 344.0
+margin_bottom = 383.0
+alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FloodLabel" type="Label" parent="MarginContainer/VBoxContainer/FloodContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/FloodContainer"]
+margin_right = 266.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="FloodInstructions" type="Label" parent="MarginContainer/VBoxContainer/FloodContainer"]
+margin_top = 44.0
+margin_right = 266.0
+margin_bottom = 75.0
+text = "Click on a white cell to start a flood in the maze"
+autowrap = true
+percent_visible = -0.025
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FloodControls" type="VBoxContainer" parent="MarginContainer/VBoxContainer/FloodContainer"]
+margin_top = 79.0
+margin_right = 266.0
+margin_bottom = 137.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FloodLabel" type="Label" parent="MarginContainer/VBoxContainer/FloodContainer/FloodControls"]
 margin_right = 266.0
 margin_bottom = 14.0
 text = "Flood Speed"
@@ -152,20 +176,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SpeedSlider" type="HSlider" parent="MarginContainer/VBoxContainer/FloodContainer"]
+[node name="SpeedSlider" type="HSlider" parent="MarginContainer/VBoxContainer/FloodContainer/FloodControls"]
 margin_top = 18.0
 margin_right = 266.0
 margin_bottom = 34.0
 size_flags_vertical = 1
-max_value = 1.0
-step = 0.01
-value = 0.5
+min_value = 1.0
+max_value = 100.0
+value = 50.0
 ticks_on_borders = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FloodHbox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/FloodContainer"]
+[node name="FloodHbox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/FloodContainer/FloodControls"]
 margin_top = 38.0
 margin_right = 266.0
 margin_bottom = 58.0
@@ -173,13 +197,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PauseFloodButton" type="Button" parent="MarginContainer/VBoxContainer/FloodContainer/FloodHbox"]
+[node name="PauseFloodButton" type="Button" parent="MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox"]
 margin_right = 131.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "Pause Flood"
 
-[node name="ResetFloodButton" type="Button" parent="MarginContainer/VBoxContainer/FloodContainer/FloodHbox"]
+[node name="ResetFloodButton" type="Button" parent="MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox"]
 margin_left = 135.0
 margin_right = 266.0
 margin_bottom = 20.0
@@ -189,3 +213,5 @@ text = "Reset Flood"
 [connection signal="toggled" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/RunStopButton" to="." method="_on_RunStopButton_toggled"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/CompleteButton" to="." method="_on_CompleteButton_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/ResetButton" to="." method="_on_ResetButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox/PauseFloodButton" to="." method="_on_PauseFloodButton_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox/ResetFloodButton" to="." method="_on_ResetFloodButton_pressed"]

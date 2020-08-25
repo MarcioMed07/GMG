@@ -14,8 +14,7 @@ All notable changes to this project will be documented in this file.
 - Generation Controls
 - Environment background to dark grey
 - Separated flood algorithm, maze is now almost independent
-### Removed
-- Flood controls (Will come back in the future)
+- Flood controls
 
 ## [1.0.0] ("https://github.com/MarcioMed07/GMG/releases/tag/v1.0.0") - 2020-08-19
 ### Added

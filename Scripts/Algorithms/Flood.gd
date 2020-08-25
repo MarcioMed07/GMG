@@ -6,6 +6,8 @@ const Utils = preload("res://Scripts/Utils.gd")
 # Flood variables
 var floodQueue = []
 var floodPause = false
+var maxCD = 100
+var CD = 0
 
 func resetFlood(maze):
 	maze.buildTiles()
@@ -18,9 +20,18 @@ func floodPause():
 
 func floodProcess(delta, maze):
 	if Input.is_action_just_pressed("mouse_click") && !maze.generatingMaze:
-		floodQueue.append(maze.get_node("TileMap").world_to_map(maze.get_global_mouse_position()/maze.scale))
-	if  !floodPause:
-		floodQueue = floodFill(floodQueue, maze)
+		var cell = maze.get_node("TileMap").world_to_map(maze.get_global_mouse_position()/maze.scale)
+		if maze.get_node("TileMap").get_cellv(cell) == Utils.TileColor.WHITE:
+			floodQueue.append(cell)
+		
+	if !floodPause && !floodQueue.empty():
+		if CD <= 0:
+			floodQueue = floodFill(floodQueue, maze)
+			CD += maxCD*delta
+		else:
+			var speed = maze.panel.floodSlider.value
+			CD -= (speed*delta)
+	
 
 
 func floodFill(queue, maze):
