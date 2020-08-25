@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Panel scene and script
 - Step, Run, Complete and Reset generation
 - Maze class
+- Custom Building function for each algorithm
 ### Changed
 - Separated some utilities functions to its own file
 - Separated each generation algorithm to its own file

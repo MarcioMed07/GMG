@@ -4,10 +4,10 @@ const Cell = preload("res://Scripts/Cell.gd");
 const Utils = preload("res://Scripts/Utils.gd")
 const Flood = preload("res://Scripts/Algorithms/Flood.gd")
 
-const algorithms = [
-	preload("res://Scripts/Algorithms/Prim.gd"),
-	preload("res://Scripts/Algorithms/DepthFirst.gd"),
-	preload("res://Scripts/Algorithms/AldousBroder.gd")
+var algorithms = [
+	preload("res://Scripts/Algorithms/Prim.gd").new(),
+	preload("res://Scripts/Algorithms/AldousBroder.gd").new(),
+	preload("res://Scripts/Algorithms/DepthFirst.gd").new(),
 ]
 
 #Ui Variables
@@ -33,15 +33,12 @@ func _process(delta):
 			panel.stop = false
 		else:
 			algorithms[panel.algorithmOptions.selected].process(self)
-			buildTiles(true)
 	elif panel.step :
 		panel.step = false
 		algorithms[panel.algorithmOptions.selected].process(self)
-		buildTiles(true)
 	pass
 
 
-## Maze Utils
 func getCell(x,y):
 	return cells[y * panel.xSpin.value +x];
 
@@ -70,7 +67,6 @@ func prepareMaze():
 		cell.x = i%int(width);
 		cell.y = i/int(width);
 		cells.append(cell);
-	$TileMap.clear()
 	buildTiles()
 	fixScale()
 	last = getCell(0,0)
@@ -81,6 +77,7 @@ func startGeneration():
 	generatingMaze = true
 	fixScale()
 	pass
+
 
 func finishGeneration():
 	generatingMaze = false
@@ -102,40 +99,22 @@ func fixScale():
 	scale = Vector2(scaleFactor,scaleFactor)
 
 
-func buildTiles(building = false, neighbors = true):
+func buildTiles():
 	var width = panel.xSpin.value
 	var height = panel.ySpin.value
-	if building && cellStack.size() > 0:
-		var cell = cellStack[0]
-		if !last:
-			last = getCell(0,0)
-		if neighbors:
-			for lastNei in getNeighbors(last.x,last.y).values():
-				if lastNei.x >=0:
-					buildCell(lastNei)
-		buildCell(last)
-		last = cell
-		buildCell(cell,building)
-		if neighbors:
-			for nei in getNeighbors(cell.x,cell.y).values():
-				if nei.x >=0:
-					buildCell(nei)
-	else:
-		$TileMap.clear()
-		for x in range(-1,width*2):
-			for y in range(-1,height*2):
-				$TileMap.set_cell(x+1,y+1,1)
-		for cell in cells:
-			buildCell(cell)
+	$TileMap.clear()
+	for x in range(-1,width*2):
+		for y in range(-1,height*2):
+			$TileMap.set_cell(x+1,y+1,1)
+	for cell in cells:
+		buildCell(cell)
 
 
-func buildCell(cell, building = false):
+func buildCell(cell):
 	var tm = $TileMap
 	var vec = Vector2(cell.x*2,cell.y*2) + Vector2(+1,+1)
-	tm.set_cellv(vec, 3 if building && cell.visited else !cell.visited)
+	tm.set_cellv(vec, !cell.visited)
 	tm.set_cellv(vec + Vector2(0,-1), cell.walls[Cell.Wall.UP])
 	tm.set_cellv(vec + Vector2(0,+1), cell.walls[Cell.Wall.DOWN])
 	tm.set_cellv(vec + Vector2(-1,0), cell.walls[Cell.Wall.LEFT])
 	tm.set_cellv(vec + Vector2(+1,0), cell.walls[Cell.Wall.RIGHT])
-
-

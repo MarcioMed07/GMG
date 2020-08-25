@@ -1,4 +1,4 @@
-extends Node
+enum TileColor{WHITE, BLACK, BLUE, RED, PINK}
 
 static func flat(arr):
 	var flat_list = []

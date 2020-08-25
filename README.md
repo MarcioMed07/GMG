@@ -1,6 +1,7 @@
 # GMG
 
 GMG is a showdown of Maze Generator algorithms made with Godot Engine.
+Project [Trello](https://trello.com/b/hxKZsEfR/gmg-godot-maze-generator)
 
 ## How to use
 
