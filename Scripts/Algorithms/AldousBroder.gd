@@ -17,17 +17,22 @@ func process(maze):
 		var cell = maze.cellStack[0]
 		var neiDict = maze.getNeighbors(cell.x,cell.y)
 		var neiKeys = Utils.shuffle(neiDict.keys())
+		var found = false
 		for dir in neiKeys:
-			if neiDict[dir].x >= 0:
-				if !neiDict[dir].visited:
-					neiDict[dir].setWall(Cell.oppositeWall(dir),false)
-					cell.setWall(dir,false)
-					neiDict[dir].visit()
-					maze.cellStack.push_front(neiDict[dir])
-				else:
+			if !neiDict[dir].visited:
+				neiDict[dir].setWall(Cell.oppositeWall(dir),false)
+				cell.setWall(dir,false)
+				neiDict[dir].visit()
+				maze.cellStack.push_front(neiDict[dir])
+				found = true
+				break
+		if !found:
+			for dir in neiKeys:
+				if neiDict[dir].x >= 0:
 					maze.cellStack.erase(neiDict[dir])
 					maze.cellStack.push_front(neiDict[dir])
-				break;
+					break
+			
 		buildTiles(maze, cell)
 	else:
 		maze.finishGeneration()

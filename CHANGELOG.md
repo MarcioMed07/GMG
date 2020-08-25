@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 - Environment background to dark grey
 - Separated flood algorithm, maze is now almost independent
 - Flood controls
-
+- Improved Aldous Broder performance
 ## [1.0.0] ("https://github.com/MarcioMed07/GMG/releases/tag/v1.0.0") - 2020-08-19
 ### Added
 - Randomized depth-first
