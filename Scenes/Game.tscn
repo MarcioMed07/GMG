@@ -24,7 +24,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Maze" parent="CanvasLayer/Divider/ViewportContainer" instance=ExtResource( 1 )]
+[node name="Viewport" type="Viewport" parent="CanvasLayer/Divider/ViewportContainer"]
+size = Vector2( 706, 576 )
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="Maze" parent="CanvasLayer/Divider/ViewportContainer/Viewport" instance=ExtResource( 1 )]
 
 [node name="Panel" parent="CanvasLayer/Divider" instance=ExtResource( 2 )]
 [connection signal="dragged" from="CanvasLayer/Divider" to="CanvasLayer/Divider/Panel" method="_on_Divider_dragged"]

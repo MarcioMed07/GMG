@@ -1,7 +1,8 @@
 extends Panel
 var Maze = load('res://Scenes/Maze.tscn')
 
-onready var maze: Maze = get_node("/root/Game/CanvasLayer/Divider/ViewportContainer/Maze")
+onready var maze: Maze = get_node("/root/Game/CanvasLayer/Divider/ViewportContainer/Viewport/Maze")
+onready var divider: HSplitContainer = get_node("/root/Game/CanvasLayer/Divider")
 
 onready var algorithmOptions: OptionButton = get_node("MarginContainer/VBoxContainer/AlgorithmContainer/AlgorithmOptions")
 onready var xSpin: SpinBox = get_node("MarginContainer/VBoxContainer/AlgorithmContainer/DimensionHbox/XSpinVBox/XSpinBox")
@@ -16,6 +17,9 @@ onready var pauseFloodButton: Button = get_node("MarginContainer/VBoxContainer/F
 onready var resetFloodButton: Button = get_node("MarginContainer/VBoxContainer/FloodContainer/FloodControls/FloodHbox/ResetFloodButton")
 onready var floodSlider: HSlider = get_node("MarginContainer/VBoxContainer/FloodContainer/FloodControls/SpeedSlider")
 
+onready var playerContainer: VBoxContainer = get_node("MarginContainer/VBoxContainer/PlayerContainer")
+onready var playerButton: Button = get_node("MarginContainer/VBoxContainer/PlayerContainer/PlayerButton")
+
 var step = false
 var runStop = false
 var complete = false
@@ -28,9 +32,12 @@ func _ready():
 
 func _process(delta):
 	floodContainer.visible = !maze.generatingMaze
-
+	playerContainer.visible = maze.completeMaze
 
 func startGeneration():
+	if maze.has_node("2dPlayer"):
+		playerButton.text = "Create Player"
+		maze.get_node("2dPlayer").queue_free()
 	maze.startGeneration()
 
 
@@ -84,7 +91,7 @@ func _on_CompleteButton_pressed():
 
 func _on_ResetButton_pressed():
 	maze.prepareMaze()
-	maze.finishGeneration()
+	maze.finishGeneration(false)
 
 
 func _on_PauseFloodButton_pressed():
@@ -94,3 +101,17 @@ func _on_PauseFloodButton_pressed():
 
 func _on_ResetFloodButton_pressed():
 	maze.flood.resetFlood(maze)
+
+
+func _on_PlayerButton_pressed():
+	_on_ResetFloodButton_pressed()
+	if maze.has_node("2dPlayer"):
+		playerButton.text = "Create Player"
+		maze.get_node("2dPlayer").queue_free()
+	else:
+		playerButton.text = "Kill Player"
+		var player = preload("res://Scenes/2dPlayer.tscn").instance()
+		player.position = maze.get_node("TileMap").map_to_world(Vector2(1,1)) + Vector2(5,5)
+		maze.add_child(player)
+	pass # Replace with function body.
+

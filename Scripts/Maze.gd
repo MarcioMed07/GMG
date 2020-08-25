@@ -5,9 +5,9 @@ const Utils = preload("res://Scripts/Utils.gd")
 const Flood = preload("res://Scripts/Algorithms/Flood.gd")
 
 var algorithms = [
+	preload("res://Scripts/Algorithms/DepthFirst.gd").new(),
 	preload("res://Scripts/Algorithms/Prim.gd").new(),
 	preload("res://Scripts/Algorithms/AldousBroder.gd").new(),
-	preload("res://Scripts/Algorithms/DepthFirst.gd").new(),
 ]
 
 #Ui Variables
@@ -18,7 +18,7 @@ var cells: Array;
 var generatingMaze = false
 var cellStack = []
 var flood: Flood = Flood.new()
-var last
+var completeMaze = false
 
 
 func _process(delta):
@@ -69,27 +69,29 @@ func prepareMaze():
 		cells.append(cell);
 	buildTiles()
 	fixScale()
-	last = getCell(0,0)
 
 
 func startGeneration():
 	algorithms[panel.algorithmOptions.selected].generate(self)
 	generatingMaze = true
+	completeMaze = false
 	fixScale()
 	pass
 
 
-func finishGeneration():
+func finishGeneration(mazeCompleted = true):
 	generatingMaze = false
+	completeMaze = mazeCompleted
 	buildTiles()
 	panel.finishGeneration()
+	fixScale()
 	pass
 
 
 func fixScale():
 	var width = panel.xSpin.value
 	var height = panel.ySpin.value
-	var viewportSize = get_parent().rect_size
+	var viewportSize = get_parent().get_parent().rect_size
 	var mazeSize = Vector2(width*2+1, height*2+1) * $TileMap.get_cell_size()
 	var scaleFactor = 1
 	if viewportSize.aspect() > mazeSize.aspect():

@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Step, Run, Complete and Reset generation
 - Maze class
 - Custom Building function for each algorithm
+- 2D Character to explorer the maze
 ### Changed
 - Separated some utilities functions to its own file
 - Separated each generation algorithm to its own file
