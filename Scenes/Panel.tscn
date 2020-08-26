@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/Panel.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Tileset.tres" type="TileSet" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.141176, 0.141176, 0.141176, 1 )
@@ -226,6 +227,34 @@ margin_top = 44.0
 margin_right = 266.0
 margin_bottom = 64.0
 text = "Create Player"
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/PlayerContainer"]
+visible = false
+margin_top = 68.0
+margin_right = 266.0
+margin_bottom = 268.0
+
+[node name="ViewportContainer" type="ViewportContainer" parent="MarginContainer/VBoxContainer/PlayerContainer/CenterContainer"]
+margin_left = 33.0
+margin_right = 233.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 200, 200 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="MarginContainer/VBoxContainer/PlayerContainer/CenterContainer/ViewportContainer"]
+size = Vector2( 200, 200 )
+handle_input_locally = false
+render_target_update_mode = 0
+
+[node name="Minimap" type="TileMap" parent="MarginContainer/VBoxContainer/PlayerContainer/CenterContainer/ViewportContainer/Viewport"]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 10, 10 )
+format = 1
 [connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/StepButton" to="." method="_on_StepButton_pressed"]
 [connection signal="toggled" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/RunStopButton" to="." method="_on_RunStopButton_toggled"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/AlgorithmContainer/HBoxContainer/CompleteButton" to="." method="_on_CompleteButton_pressed"]

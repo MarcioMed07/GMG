@@ -20,6 +20,8 @@ var cellStack = []
 var flood: Flood = Flood.new()
 var completeMaze = false
 
+func _ready():
+	pass
 
 func _process(delta):
 	flood.floodProcess(delta,self)
@@ -68,14 +70,16 @@ func prepareMaze():
 		cell.y = i/int(width);
 		cells.append(cell);
 	buildTiles()
-	fixScale()
+	scale = Utils.fixScale(Vector2(panel.xSpin.value*2+1, panel.ySpin.value*2+1) * $TileMap.get_cell_size(), get_parent().get_parent().rect_size)
+	
+	
 
 
 func startGeneration():
 	algorithms[panel.algorithmOptions.selected].generate(self)
 	generatingMaze = true
 	completeMaze = false
-	fixScale()
+	scale = Utils.fixScale(Vector2(panel.xSpin.value*2+1, panel.ySpin.value*2+1) * $TileMap.get_cell_size(), get_parent().get_parent().rect_size)
 	pass
 
 
@@ -84,21 +88,8 @@ func finishGeneration(mazeCompleted = true):
 	completeMaze = mazeCompleted
 	buildTiles()
 	panel.finishGeneration()
-	fixScale()
+	scale = Utils.fixScale(Vector2(panel.xSpin.value*2+1, panel.ySpin.value*2+1) * $TileMap.get_cell_size(), get_parent().get_parent().rect_size)
 	pass
-
-
-func fixScale():
-	var width = panel.xSpin.value
-	var height = panel.ySpin.value
-	var viewportSize = get_parent().get_parent().rect_size
-	var mazeSize = Vector2(width*2+1, height*2+1) * $TileMap.get_cell_size()
-	var scaleFactor = 1
-	if viewportSize.aspect() > mazeSize.aspect():
-		scaleFactor = viewportSize.y/mazeSize.y
-	else:
-		scaleFactor = viewportSize.x/mazeSize.x
-	scale = Vector2(scaleFactor,scaleFactor)
 
 
 func buildTiles():

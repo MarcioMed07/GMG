@@ -1,4 +1,6 @@
 extends Panel
+const Utils = preload("res://Scripts/Utils.gd")
+
 var Maze = load('res://Scenes/Maze.tscn')
 
 onready var maze: Maze = get_node("/root/Game/CanvasLayer/Divider/ViewportContainer/Viewport/Maze")
@@ -19,6 +21,8 @@ onready var floodSlider: HSlider = get_node("MarginContainer/VBoxContainer/Flood
 
 onready var playerContainer: VBoxContainer = get_node("MarginContainer/VBoxContainer/PlayerContainer")
 onready var playerButton: Button = get_node("MarginContainer/VBoxContainer/PlayerContainer/PlayerButton")
+onready var minimapViewport: Viewport = get_node("MarginContainer/VBoxContainer/PlayerContainer/CenterContainer/ViewportContainer/Viewport")
+onready var minimap: TileMap = get_node("MarginContainer/VBoxContainer/PlayerContainer/CenterContainer/ViewportContainer/Viewport/Minimap")
 
 var step = false
 var runStop = false
@@ -27,12 +31,15 @@ var complete = false
 func _ready():
 	for algorithm in maze.algorithms:
 		algorithmOptions.add_item(algorithm.name)
+	
 	pass
 
 
 func _process(delta):
 	floodContainer.visible = !maze.generatingMaze
 	playerContainer.visible = maze.completeMaze
+	updateMinimap()
+
 
 func startGeneration():
 	if maze.has_node("2dPlayer"):
@@ -50,9 +57,8 @@ func finishGeneration():
 	xSpin.editable = true
 	ySpin.editable = true
 
-
 func _on_Divider_dragged(offset):
-	maze.fixScale()
+	maze.scale = Utils.fixScale(Vector2(xSpin.value*2+1, ySpin.value*2+1) * maze.get_node("TileMap").get_cell_size(), maze.get_parent().get_parent().rect_size)
 
 
 func _on_StepButton_pressed():
@@ -108,10 +114,27 @@ func _on_PlayerButton_pressed():
 	if maze.has_node("2dPlayer"):
 		playerButton.text = "Create Player"
 		maze.get_node("2dPlayer").queue_free()
+		maze.scale = Utils.fixScale(Vector2(xSpin.value*2+1, ySpin.value*2+1) * maze.get_node("TileMap").get_cell_size(), maze.get_parent().get_parent().rect_size)
+		minimap.clear()
+		get_node("MarginContainer/VBoxContainer/PlayerContainer/CenterContainer").visible = false
 	else:
+		maze.scale = Vector2(1,1)
 		playerButton.text = "Kill Player"
 		var player = preload("res://Scenes/2dPlayer.tscn").instance()
 		player.position = maze.get_node("TileMap").map_to_world(Vector2(1,1)) + Vector2(5,5)
 		maze.add_child(player)
+		lastPosition = player.position
+		minimap.scale = Utils.fixScale(Vector2(xSpin.value*2+1, ySpin.value*2+1) * minimap.get_cell_size(), minimapViewport.get_parent().rect_size)
+		minimap.clear()
+		get_node("MarginContainer/VBoxContainer/PlayerContainer/CenterContainer").visible = true
 	pass # Replace with function body.
+
+var lastPosition
+func updateMinimap():
+	if maze.has_node("2dPlayer"):
+		var player = maze.get_node("2dPlayer")
+		minimap.set_cellv(minimap.world_to_map(lastPosition), Utils.TileColor.GREY)
+		if lastPosition != player.position:
+			lastPosition = player.position
+		minimap.set_cellv(minimap.world_to_map(player.position), Utils.TileColor.GREEN)
 

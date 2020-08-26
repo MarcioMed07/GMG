@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Maze class
 - Custom Building function for each algorithm
 - 2D Character to explorer the maze
+- Minimap to 2d exploration
 ### Changed
 - Separated some utilities functions to its own file
 - Separated each generation algorithm to its own file
