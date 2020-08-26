@@ -39,9 +39,9 @@ __meta__ = {
 }
 
 [node name="AlgorithmContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 118.0
+margin_top = 109.0
 margin_right = 266.0
-margin_bottom = 208.0
+margin_bottom = 199.0
 
 [node name="AlgorithmOptions" type="OptionButton" parent="MarginContainer/VBoxContainer/AlgorithmContainer"]
 margin_right = 266.0
@@ -137,9 +137,9 @@ size_flags_horizontal = 3
 text = "Reset"
 
 [node name="FloodContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 212.0
+margin_top = 203.0
 margin_right = 266.0
-margin_bottom = 349.0
+margin_bottom = 340.0
 alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -210,9 +210,9 @@ size_flags_horizontal = 3
 text = "Reset Flood"
 
 [node name="PlayerContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 353.0
+margin_top = 344.0
 margin_right = 266.0
-margin_bottom = 417.0
+margin_bottom = 426.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -228,11 +228,17 @@ margin_right = 266.0
 margin_bottom = 64.0
 text = "Create Player"
 
-[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/PlayerContainer"]
-visible = false
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PlayerContainer"]
 margin_top = 68.0
 margin_right = 266.0
-margin_bottom = 268.0
+margin_bottom = 82.0
+text = "Use W, A, S and D to move the player."
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/PlayerContainer"]
+visible = false
+margin_top = 86.0
+margin_right = 266.0
+margin_bottom = 286.0
 
 [node name="ViewportContainer" type="ViewportContainer" parent="MarginContainer/VBoxContainer/PlayerContainer/CenterContainer"]
 margin_left = 33.0
